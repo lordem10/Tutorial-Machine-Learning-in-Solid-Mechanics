@@ -36,7 +36,11 @@ class RNNCell(tf.keras.layers.Layer):
         self.state_size = 1
         self.output_size = 1
 
-        self.MLP = MLP(units=[16, 2], activation_funcs=['softplus', 'softplus'])
+        self.mlp = MLP(units=[32, 2], activation_funcs=['softplus', 'linear'])
+
+        #self.ls = [layers.Dense(32, 'softplus')]
+        #self.ls += [layers.Dense(2)]
+
         
     def call(self, inputs, states):
         
@@ -59,8 +63,10 @@ class RNNCell(tf.keras.layers.Layer):
         #   x gets passed to a FFNN which yields the current stress and history
         #   variable
     
-        for l in self.ls:
-            x = l(x)
+        #for l in self.ls:
+        #    x = l(x)
+        
+        x = self.mlp(x)
          
         sig_n = x[:, 0:1]
         gamma_n = x[:, 1:2]
